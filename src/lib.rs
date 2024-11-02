@@ -47,6 +47,8 @@
 //! Inserting an item into the slab, returning an index:
 //! ```rust
 //! # use sharded_slab::Slab;
+//! # let context = dyntls_host::get();
+//! # unsafe {context.initialize();}
 //! let slab = Slab::new();
 //!
 //! let key = slab.insert("hello world").unwrap();
@@ -57,10 +59,13 @@
 //! ```rust
 //! # use sharded_slab::Slab;
 //! use std::sync::Arc;
+//! # let context = dyntls_host::get();
+//! # unsafe {context.initialize();}
 //! let slab = Arc::new(Slab::new());
 //!
 //! let slab2 = slab.clone();
 //! let thread2 = std::thread::spawn(move || {
+//! #   unsafe {context.initialize();}
 //!     let key = slab2.insert("hello from thread two").unwrap();
 //!     assert_eq!(slab2.get(key).unwrap(), "hello from thread two");
 //!     key
@@ -81,6 +86,8 @@
 //!
 //! ```rust
 //! # use sharded_slab::Slab;
+//! # let context = dyntls_host::get();
+//! # unsafe {context.initialize();}
 //! use std::sync::{Arc, Mutex};
 //! let slab = Arc::new(Slab::new());
 //!
@@ -88,6 +95,7 @@
 //!
 //! let slab2 = slab.clone();
 //! let thread2 = std::thread::spawn(move || {
+//! #   unsafe {context.initialize();}
 //!     let hello = slab2.get(key).expect("item missing");
 //!     let mut hello = hello.lock().expect("mutex poisoned");
 //!     *hello = String::from("hello everyone!");
@@ -259,6 +267,8 @@ pub struct Entry<'a, T, C: cfg::Config = DefaultConfig> {
 ///
 /// ```
 /// # use sharded_slab::Slab;
+/// # let context = dyntls_host::get();
+/// # unsafe {context.initialize();}
 /// let mut slab = Slab::new();
 ///
 /// let hello = {
@@ -295,6 +305,8 @@ pub struct VacantEntry<'a, T, C: cfg::Config = DefaultConfig> {
 ///
 /// ```
 /// # use sharded_slab::Slab;
+/// # let context = dyntls_host::get();
+/// # unsafe {context.initialize();}
 /// use std::sync::Arc;
 ///
 /// let slab: Arc<Slab<&'static str>> = Arc::new(Slab::new());
@@ -313,6 +325,8 @@ pub struct VacantEntry<'a, T, C: cfg::Config = DefaultConfig> {
 ///
 /// ```
 /// # use sharded_slab::Slab;
+/// # let context = dyntls_host::get();
+/// # unsafe {context.initialize();}
 /// use sharded_slab::OwnedEntry;
 /// use std::sync::Arc;
 ///
@@ -346,6 +360,8 @@ pub struct VacantEntry<'a, T, C: cfg::Config = DefaultConfig> {
 ///
 /// ```
 /// # use sharded_slab::Slab;
+/// # let context = dyntls_host::get();
+/// # unsafe {context.initialize();}
 /// use std::{thread, sync::Arc};
 ///
 /// let slab: Arc<Slab<&'static str>> = Arc::new(Slab::new());
@@ -355,6 +371,7 @@ pub struct VacantEntry<'a, T, C: cfg::Config = DefaultConfig> {
 /// let value = slab.clone().get_owned(key).unwrap();
 ///
 /// thread::spawn(move || {
+/// #   unsafe {context.initialize();}
 ///     assert_eq!(value, "hello world");
 ///     // ...
 /// }).join().unwrap();
@@ -412,6 +429,8 @@ impl<T, C: cfg::Config> Slab<T, C> {
     /// # Examples
     /// ```rust
     /// # use sharded_slab::Slab;
+    /// # let context = dyntls_host::get();
+    /// # unsafe {context.initialize();}
     /// let slab = Slab::new();
     ///
     /// let key = slab.insert("hello world").unwrap();
@@ -439,6 +458,8 @@ impl<T, C: cfg::Config> Slab<T, C> {
     ///
     /// ```
     /// # use sharded_slab::Slab;
+    /// # let context = dyntls_host::get();
+    /// # unsafe {context.initialize();}
     /// let mut slab = Slab::new();
     ///
     /// let hello = {
@@ -477,6 +498,8 @@ impl<T, C: cfg::Config> Slab<T, C> {
     /// # Examples
     ///
     /// ```rust
+    /// # let context = dyntls_host::get();
+    /// # unsafe {context.initialize();}
     /// let slab = sharded_slab::Slab::new();
     /// let key = slab.insert("hello world").unwrap();
     ///
@@ -488,6 +511,8 @@ impl<T, C: cfg::Config> Slab<T, C> {
     /// ```
     ///
     /// ```rust
+    /// # let context = dyntls_host::get();
+    /// # unsafe {context.initialize();}
     /// use std::sync::Arc;
     ///
     /// let slab = Arc::new(sharded_slab::Slab::new());
@@ -545,6 +570,8 @@ impl<T, C: cfg::Config> Slab<T, C> {
     /// # Examples
     ///
     /// ```rust
+    /// # let context = dyntls_host::get();
+    /// # unsafe {context.initialize();}
     /// let slab = sharded_slab::Slab::new();
     /// let key = slab.insert("hello world").unwrap();
     ///
@@ -557,12 +584,15 @@ impl<T, C: cfg::Config> Slab<T, C> {
     ///
     /// ```rust
     /// use std::sync::Arc;
+    /// # let context = dyntls_host::get();
+    /// # unsafe {context.initialize();}
     ///
     /// let slab = Arc::new(sharded_slab::Slab::new());
     /// let key = slab.insert("hello world").unwrap();
     ///
     /// let slab2 = slab.clone();
     /// let thread2 = std::thread::spawn(move || {
+    /// #   unsafe {context.initialize();}
     ///     // Depending on when this thread begins executing, the item may
     ///     // or may not have already been removed...
     ///     if let Some(item) = slab2.get(key) {
@@ -599,6 +629,8 @@ impl<T, C: cfg::Config> Slab<T, C> {
     /// # Examples
     ///
     /// ```rust
+    /// # let context = dyntls_host::get();
+    /// # unsafe {context.initialize();}
     /// let slab = sharded_slab::Slab::new();
     /// let key = slab.insert("hello world").unwrap();
     ///
@@ -636,6 +668,8 @@ impl<T, C: cfg::Config> Slab<T, C> {
     ///
     /// ```
     /// # use sharded_slab::Slab;
+    /// # let context = dyntls_host::get();
+    /// # unsafe {context.initialize();}
     /// use std::sync::Arc;
     ///
     /// let slab: Arc<Slab<&'static str>> = Arc::new(Slab::new());
@@ -654,6 +688,8 @@ impl<T, C: cfg::Config> Slab<T, C> {
     ///
     /// ```
     /// # use sharded_slab::Slab;
+    /// # let context = dyntls_host::get();
+    /// # unsafe {context.initialize();}
     /// use sharded_slab::OwnedEntry;
     /// use std::sync::Arc;
     ///
@@ -687,6 +723,8 @@ impl<T, C: cfg::Config> Slab<T, C> {
     ///
     /// ```
     /// # use sharded_slab::Slab;
+    /// # let context = dyntls_host::get();
+    /// # unsafe {context.initialize();}
     /// use std::{thread, sync::Arc};
     ///
     /// let slab: Arc<Slab<&'static str>> = Arc::new(Slab::new());
@@ -696,6 +734,7 @@ impl<T, C: cfg::Config> Slab<T, C> {
     /// let value = slab.clone().get_owned(key).unwrap();
     ///
     /// thread::spawn(move || {
+    /// #   unsafe {context.initialize();}
     ///     assert_eq!(value, "hello world");
     ///     // ...
     /// }).join().unwrap();
@@ -725,6 +764,8 @@ impl<T, C: cfg::Config> Slab<T, C> {
     /// # Examples
     ///
     /// ```
+    /// # let context = dyntls_host::get();
+    /// # unsafe {context.initialize();}
     /// let slab = sharded_slab::Slab::new();
     ///
     /// let key = slab.insert("hello world").unwrap();
@@ -863,6 +904,8 @@ impl<'a, T, C: cfg::Config> VacantEntry<'a, T, C> {
     ///
     /// ```
     /// # use sharded_slab::Slab;
+    /// # let context = dyntls_host::get();
+    /// # unsafe {context.initialize();}
     /// let mut slab = Slab::new();
     ///
     /// let hello = {
@@ -909,6 +952,8 @@ impl<'a, T, C: cfg::Config> VacantEntry<'a, T, C> {
     ///
     /// ```
     /// # use sharded_slab::*;
+    /// # let context = dyntls_host::get();
+    /// # unsafe {context.initialize();}
     /// let mut slab = Slab::new();
     ///
     /// let hello = {

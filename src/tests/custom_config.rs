@@ -37,6 +37,10 @@ fn slab_eq(mut lhs: Slab<u64, impl Config>, mut rhs: Slab<u64, impl Config>) {
 /// Initially, it revealed bugs in the `Slot::release_with()` implementation.
 #[test]
 fn insert_remove() {
+    let context = dyntls_host::get();
+    unsafe {
+        context.initialize();
+    }
     eprintln!("bits={}; config={:#?}", usize::BITS, CustomConfig::debug());
 
     let default_slab = Slab::<u64, _>::new();
@@ -57,6 +61,10 @@ fn insert_remove() {
 /// Initially, it revealed bugs in the `Slot::get()` implementation.
 #[test]
 fn double_get() {
+    let context = dyntls_host::get();
+    unsafe {
+        context.initialize();
+    }
     eprintln!("bits={}; config={:#?}", usize::BITS, CustomConfig::debug());
 
     let default_slab = Slab::<u64, _>::new();

@@ -89,6 +89,10 @@ fn dont_drop() {
 
 #[test]
 fn concurrent_create_with_clear() {
+    let context = dyntls_host::get();
+    unsafe {
+        context.initialize();
+    }
     run_model("concurrent_create_with_clear", || {
         let pool: Arc<Pool<DontDropMe>> = Arc::new(Pool::new());
         let pair = Arc::new((Mutex::new(None), Condvar::new()));

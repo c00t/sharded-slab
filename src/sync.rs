@@ -63,11 +63,10 @@ mod inner {
 #[cfg(not(all(loom, any(feature = "loom", test))))]
 mod inner {
     #![allow(dead_code)]
-    pub(crate) use lazy_static::lazy_static;
+    pub(crate) use dyntls::{lazy_static, thread_local};
     pub(crate) use std::{
         sync::{atomic, Mutex},
         thread::yield_now,
-        thread_local,
     };
 
     pub(crate) mod hint {

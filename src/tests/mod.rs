@@ -10,6 +10,8 @@ mod idx {
         #[test]
         #[cfg_attr(loom, ignore)]
         fn tid_roundtrips(tid in 0usize..Tid::<cfg::DefaultConfig>::BITS) {
+            let context = dyntls_host::get();
+            unsafe {context.initialize();}
             let tid = Tid::<cfg::DefaultConfig>::from_usize(tid);
             let packed = tid.pack(0);
             assert_eq!(tid, Tid::from_packed(packed));
@@ -22,6 +24,8 @@ mod idx {
             gen in 0usize..slot::Generation::<cfg::DefaultConfig>::BITS,
             addr in 0usize..page::Addr::<cfg::DefaultConfig>::BITS,
         ) {
+            let context = dyntls_host::get();
+            unsafe {context.initialize();}
             let tid = Tid::<cfg::DefaultConfig>::from_usize(tid);
             let gen = slot::Generation::<cfg::DefaultConfig>::from_usize(gen);
             let addr = page::Addr::<cfg::DefaultConfig>::from_usize(addr);

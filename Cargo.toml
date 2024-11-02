@@ -33,7 +33,8 @@ name = "bench"
 harness = false
 
 [dependencies]
-lazy_static = "1"
+# lazy_static = "1"
+dyntls = { path = "../../../app/dyntls"}
 
 [dev-dependencies]
 proptest = "1"
@@ -41,6 +42,7 @@ criterion = "0.3"
 slab = "0.4.2"
 memory-stats = "1"
 indexmap = "1" # newer versions lead to "candidate versions found which didn't match" on 1.42.0
+dyntls-host = { path = "../../../app/dyntls_host" }
 
 [target.'cfg(loom)'.dependencies]
 loom = { version = "0.5", features = ["checkpoint"], optional = true }

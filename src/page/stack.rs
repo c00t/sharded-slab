@@ -78,6 +78,10 @@ mod test {
 
     #[test]
     fn transfer_stack() {
+        let context = dyntls_host::get();
+        unsafe {
+            context.initialize();
+        }
         test_util::run_model("transfer_stack", || {
             let causalities = [UnsafeCell::new(999), UnsafeCell::new(999)];
             let shared = Arc::new((causalities, TransferStack::<cfg::DefaultConfig>::new()));
@@ -85,6 +89,9 @@ mod test {
             let shared2 = shared.clone();
 
             let t1 = thread::spawn(move || {
+                unsafe {
+                    context.initialize();
+                }
                 let (causalities, stack) = &*shared1;
                 stack.push(0, |prev| {
                     causalities[0].with_mut(|c| unsafe {
@@ -94,6 +101,9 @@ mod test {
                 });
             });
             let t2 = thread::spawn(move || {
+                unsafe {
+                    context.initialize();
+                }
                 let (causalities, stack) = &*shared2;
                 stack.push(1, |prev| {
                     causalities[1].with_mut(|c| unsafe {

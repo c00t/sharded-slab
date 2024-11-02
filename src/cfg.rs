@@ -175,6 +175,9 @@ mod tests {
     #[cfg_attr(loom, ignore)]
     #[should_panic]
     fn validates_max_refs() {
+        unsafe {
+            dyntls_host::get().initialize();
+        }
         struct GiantGenConfig;
 
         // Configure the slab with a very large number of bits for the generation
@@ -192,6 +195,9 @@ mod tests {
     #[test]
     #[cfg_attr(loom, ignore)]
     fn big() {
+        unsafe {
+            dyntls_host::get().initialize();
+        }
         let slab = Slab::new();
 
         for i in 0..10000 {
@@ -204,6 +210,9 @@ mod tests {
     #[test]
     #[cfg_attr(loom, ignore)]
     fn custom_page_sz() {
+        unsafe {
+            dyntls_host::get().initialize();
+        }
         let slab = Slab::new_with_config::<test_util::TinyConfig>();
 
         for i in 0..4096 {

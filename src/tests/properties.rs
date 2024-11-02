@@ -217,11 +217,15 @@ fn run<C: Config>(actions: Vec<Action>) -> Result<(), TestCaseError> {
 proptest! {
     #[test]
     fn default_config(actions in prop::collection::vec(action_strategy(), ACTIONS)) {
+        let context = dyntls_host::get();
+        unsafe {context.initialize();}
         run::<DefaultConfig>(actions)?;
     }
 
     #[test]
     fn custom_config(actions in prop::collection::vec(action_strategy(), ACTIONS)) {
+        let context = dyntls_host::get();
+        unsafe {context.initialize();}
         run::<CustomConfig>(actions)?;
     }
 }

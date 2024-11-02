@@ -36,6 +36,8 @@ use std::{fmt, marker::PhantomData, sync::Arc};
 /// Add an entry to the pool, returning an index:
 /// ```
 /// # use sharded_slab::Pool;
+/// # let context = dyntls_host::get();
+/// # unsafe {context.initialize();}
 /// let pool: Pool<String> = Pool::new();
 ///
 /// let key = pool.create_with(|item| item.push_str("hello world")).unwrap();
@@ -45,6 +47,8 @@ use std::{fmt, marker::PhantomData, sync::Arc};
 /// Create a new pooled item, returning a guard that allows mutable access:
 /// ```
 /// # use sharded_slab::Pool;
+/// # let context = dyntls_host::get();
+/// # unsafe {context.initialize();}
 /// let pool: Pool<String> = Pool::new();
 ///
 /// let mut guard = pool.create().unwrap();
@@ -59,6 +63,8 @@ use std::{fmt, marker::PhantomData, sync::Arc};
 /// be cleared when the guards referencing to it are dropped.
 /// ```
 /// # use sharded_slab::Pool;
+/// # let context = dyntls_host::get();
+/// # unsafe {context.initialize();}
 /// let pool: Pool<String> = Pool::new();
 ///
 /// let key = pool.create_with(|item| item.push_str("hello world")).unwrap();
@@ -138,6 +144,8 @@ where
 ///
 /// ```
 /// # use sharded_slab::Pool;
+/// # let context = dyntls_host::get();
+/// # unsafe {context.initialize();}
 /// use std::sync::Arc;
 ///
 /// let pool: Arc<Pool<String>> = Arc::new(Pool::new());
@@ -156,6 +164,8 @@ where
 ///
 /// ```
 /// # use sharded_slab::Pool;
+/// # let context = dyntls_host::get();
+/// # unsafe {context.initialize();}
 /// use sharded_slab::pool::OwnedRef;
 /// use std::sync::Arc;
 ///
@@ -189,6 +199,8 @@ where
 ///
 /// ```
 /// # use sharded_slab::Pool;
+/// # let context = dyntls_host::get();
+/// # unsafe {context.initialize();}
 /// use std::{thread, sync::Arc};
 ///
 /// let pool: Arc<Pool<String>> = Arc::new(Pool::new());
@@ -198,6 +210,7 @@ where
 /// let value = pool.clone().get_owned(key).unwrap();
 ///
 /// thread::spawn(move || {
+/// #   unsafe {context.initialize();}
 ///     assert_eq!(value, String::from("hello world"));
 ///     // ...
 /// }).join().unwrap();
@@ -243,6 +256,8 @@ where
 /// ```rust
 /// # use sharded_slab::Pool;
 /// # use std::thread;
+/// # let context = dyntls_host::get();
+/// # unsafe {context.initialize();}
 /// use std::sync::Arc;
 ///
 /// let pool: Arc<Pool<String>> = Arc::new(Pool::new());
@@ -261,12 +276,15 @@ where
 ///
 /// /// Other threads may now (immutably) access the item using the returned key.
 /// thread::spawn(move || {
+/// #  unsafe {context.initialize();}
 ///    assert_eq!(pool.get(key).unwrap(), String::from("Hello"));
 /// }).join().unwrap();
 /// ```
 ///
 /// ```rust
 /// # use sharded_slab::Pool;
+/// # let context = dyntls_host::get();
+/// # unsafe {context.initialize();}
 /// use std::sync::Arc;
 ///
 /// let pool: Arc<Pool<String>> = Arc::new(Pool::new());
@@ -287,6 +305,8 @@ where
 ///
 /// ```
 /// # use sharded_slab::Pool;
+/// # let context = dyntls_host::get();
+/// # unsafe {context.initialize();}
 /// use sharded_slab::pool::OwnedRefMut;
 /// use std::sync::Arc;
 ///
@@ -320,6 +340,8 @@ where
 ///
 /// ```
 /// # use sharded_slab::Pool;
+/// # let context = dyntls_host::get();
+/// # unsafe {context.initialize();}
 /// use std::{thread, sync::Arc};
 ///
 /// let pool: Arc<Pool<String>> = Arc::new(Pool::new());
@@ -328,6 +350,7 @@ where
 /// let key = value.key();
 ///
 /// thread::spawn(move || {
+/// #   unsafe {context.initialize();}
 ///     value.push_str("hello world");
 ///     // ...
 /// }).join().unwrap();
@@ -342,6 +365,8 @@ where
 ///
 /// ```
 /// # use sharded_slab::Pool;
+/// # let context = dyntls_host::get();
+/// # unsafe {context.initialize();}
 /// use std::{thread, sync::Arc};
 ///
 /// let pool: Arc<Pool<String>> = Arc::new(Pool::new());
@@ -356,6 +381,7 @@ where
 /// // Once the `OwnedRefMut` has been downgraded, other threads may
 /// // immutably access the pooled value:
 /// thread::spawn(move || {
+/// #   unsafe {context.initialize();}
 ///     assert_eq!(pool.get(key).unwrap(), String::from("hello world"));
 /// }).join().unwrap();
 ///
@@ -427,6 +453,8 @@ where
     /// ```rust
     /// # use sharded_slab::Pool;
     /// # use std::thread;
+    /// # let context = dyntls_host::get();
+    /// # unsafe {context.initialize();}
     /// let pool: Pool<String> = Pool::new();
     ///
     /// // Create a new pooled item, returning a guard that allows mutable
@@ -443,6 +471,7 @@ where
     ///
     /// /// Other threads may now (immutably) access the item using the returned key.
     /// thread::spawn(move || {
+    /// #  unsafe {context.initialize();}
     ///    assert_eq!(pool.get(key).unwrap(), String::from("Hello"));
     /// }).join().unwrap();
     /// ```
@@ -490,6 +519,8 @@ where
     /// ```rust
     /// # use sharded_slab::Pool;
     /// # use std::thread;
+    /// # let context = dyntls_host::get();
+    /// # unsafe {context.initialize();}
     /// use std::sync::Arc;
     ///
     /// let pool: Arc<Pool<String>> = Arc::new(Pool::new());
@@ -508,12 +539,15 @@ where
     ///
     /// /// Other threads may now (immutably) access the item using the returned key.
     /// thread::spawn(move || {
+    /// #  unsafe {context.initialize();}
     ///    assert_eq!(pool.get(key).unwrap(), String::from("Hello"));
     /// }).join().unwrap();
     /// ```
     ///
     /// ```rust
     /// # use sharded_slab::Pool;
+    /// # let context = dyntls_host::get();
+    /// # unsafe {context.initialize();}
     /// use std::sync::Arc;
     ///
     /// let pool: Arc<Pool<String>> = Arc::new(Pool::new());
@@ -534,6 +568,8 @@ where
     ///
     /// ```
     /// # use sharded_slab::Pool;
+    /// # let context = dyntls_host::get();
+    /// # unsafe {context.initialize();}
     /// use sharded_slab::pool::OwnedRefMut;
     /// use std::sync::Arc;
     ///
@@ -567,6 +603,8 @@ where
     ///
     /// ```
     /// # use sharded_slab::Pool;
+    /// # let context = dyntls_host::get();
+    /// # unsafe {context.initialize();}
     /// use std::{thread, sync::Arc};
     ///
     /// let pool: Arc<Pool<String>> = Arc::new(Pool::new());
@@ -575,6 +613,7 @@ where
     /// let key = value.key();
     ///
     /// thread::spawn(move || {
+    /// #   unsafe {context.initialize();}
     ///     value.push_str("hello world");
     ///     // ...
     /// }).join().unwrap();
@@ -589,6 +628,8 @@ where
     ///
     /// ```
     /// # use sharded_slab::Pool;
+    /// # let context = dyntls_host::get();
+    /// # unsafe {context.initialize();}
     /// use std::{thread, sync::Arc};
     ///
     /// let pool: Arc<Pool<String>> = Arc::new(Pool::new());
@@ -603,6 +644,7 @@ where
     /// // Once the `OwnedRefMut` has been downgraded, other threads may
     /// // immutably access the pooled value:
     /// thread::spawn(move || {
+    /// #   unsafe {context.initialize();}
     ///     assert_eq!(pool.get(key).unwrap(), String::from("hello world"));
     /// }).join().unwrap();
     ///
@@ -641,6 +683,8 @@ where
     /// ```rust
     /// # use sharded_slab::Pool;
     /// # use std::thread;
+    /// # let context = dyntls_host::get();
+    /// # unsafe {context.initialize();}
     /// let pool: Pool<String> = Pool::new();
     ///
     /// // Create a new pooled item, returning its integer key.
@@ -648,6 +692,7 @@ where
     ///
     /// /// Other threads may now (immutably) access the item using the key.
     /// thread::spawn(move || {
+    /// #  unsafe {context.initialize();}
     ///    assert_eq!(pool.get(key).unwrap(), String::from("Hello"));
     /// }).join().unwrap();
     /// ```
@@ -666,6 +711,8 @@ where
     ///
     /// ```rust
     /// # use sharded_slab::Pool;
+    /// # let context = dyntls_host::get();
+    /// # unsafe {context.initialize();}
     /// let pool: Pool<String> = Pool::new();
     /// let key = pool.create_with(|item| item.push_str("hello world")).unwrap();
     ///
@@ -695,6 +742,8 @@ where
     ///
     /// ```rust
     /// # use sharded_slab::Pool;
+    /// # let context = dyntls_host::get();
+    /// # unsafe {context.initialize();}
     /// use std::sync::Arc;
     ///
     /// let pool: Arc<Pool<String>> = Arc::new(Pool::new());
@@ -713,6 +762,8 @@ where
     ///
     /// ```
     /// # use sharded_slab::Pool;
+    /// # let context = dyntls_host::get();
+    /// # unsafe {context.initialize();}
     /// use sharded_slab::pool::OwnedRef;
     /// use std::sync::Arc;
     ///
@@ -746,6 +797,8 @@ where
     ///
     /// ```
     /// # use sharded_slab::Pool;
+    /// # let context = dyntls_host::get();
+    /// # unsafe {context.initialize();}
     /// use std::{thread, sync::Arc};
     ///
     /// let pool: Arc<Pool<String>> = Arc::new(Pool::new());
@@ -755,6 +808,7 @@ where
     /// let value = pool.clone().get_owned(key).unwrap();
     ///
     /// thread::spawn(move || {
+    /// #   unsafe {context.initialize();}
     ///     assert_eq!(value, String::from("hello world"));
     ///     // ...
     /// }).join().unwrap();
@@ -787,6 +841,8 @@ where
     ///
     /// ```rust
     /// # use sharded_slab::Pool;
+    /// # let context = dyntls_host::get();
+    /// # unsafe {context.initialize();}
     /// let pool: Pool<String> = Pool::new();
     ///
     /// // Check out an item from the pool.
@@ -803,6 +859,8 @@ where
     ///
     /// ```
     /// # use sharded_slab::Pool;
+    /// # let context = dyntls_host::get();
+    /// # unsafe {context.initialize();}
     /// let pool: Pool<String> = Pool::new();
     ///
     /// let key = pool.create_with(|item| item.push_str("Hello world!")).unwrap();
@@ -967,6 +1025,8 @@ where
     /// ```
     /// # use sharded_slab::Pool;
     /// # use std::{sync::Arc, thread};
+    /// # let context = dyntls_host::get();
+    /// # unsafe {context.initialize();}
     /// let pool = Arc::new(Pool::<String>::new());
     ///
     /// let mut guard_mut = pool.clone().create_owned().unwrap();
@@ -977,6 +1037,7 @@ where
     /// // may not access it.
     /// let pool2 = pool.clone();
     /// thread::spawn(move || {
+    /// #   unsafe {context.initialize();}
     ///     assert!(pool2.get(key).is_none())
     /// }).join().unwrap();
     ///
@@ -986,6 +1047,7 @@ where
     /// // Now, other threads may also access the pooled value.
     /// let pool2 = pool.clone();
     /// thread::spawn(move || {
+    /// #   unsafe {context.initialize();}
     ///     let guard = pool2.get(key)
     ///         .expect("the item may now be referenced by other threads");
     ///     assert_eq!(guard, String::from("Hello"));
@@ -1197,6 +1259,8 @@ where
     /// ```
     /// # use sharded_slab::Pool;
     /// # use std::{sync::Arc, thread};
+    /// # let context = dyntls_host::get();
+    /// # unsafe {context.initialize();}
     /// let pool = Arc::new(Pool::<String>::new());
     ///
     /// let mut guard_mut = pool.clone().create_owned().unwrap();
@@ -1207,6 +1271,7 @@ where
     /// // may not access it.
     /// let pool2 = pool.clone();
     /// thread::spawn(move || {
+    /// #   unsafe {context.initialize();}
     ///     assert!(pool2.get(key).is_none())
     /// }).join().unwrap();
     ///
@@ -1216,6 +1281,7 @@ where
     /// // Now, other threads may also access the pooled value.
     /// let pool2 = pool.clone();
     /// thread::spawn(move || {
+    /// #   unsafe {context.initialize();}
     ///     let guard = pool2.get(key)
     ///         .expect("the item may now be referenced by other threads");
     ///     assert_eq!(guard, String::from("Hello"));
