@@ -1,4 +1,5 @@
 use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion};
+use dyntls_host;
 use std::{
     sync::{Arc, Barrier, RwLock},
     thread,
@@ -43,6 +44,9 @@ impl<T: Send + Sync + 'static> MultithreadedBench<T> {
 const N_INSERTIONS: &[usize] = &[100, 300, 500, 700, 1000, 3000, 5000];
 
 fn insert_remove_local(c: &mut Criterion) {
+    unsafe {
+        dyntls_host::get().initialize();
+    }
     // the 10000-insertion benchmark takes the `slab` crate about an hour to
     // run; don't run this unless you're prepared for that...
     // const N_INSERTIONS: &'static [usize] = &[100, 500, 1000, 5000, 10000];
@@ -139,6 +143,9 @@ fn insert_remove_local(c: &mut Criterion) {
 }
 
 fn insert_remove_single_thread(c: &mut Criterion) {
+    unsafe {
+        dyntls_host::get().initialize();
+    }
     // the 10000-insertion benchmark takes the `slab` crate about an hour to
     // run; don't run this unless you're prepared for that...
     // const N_INSERTIONS: &'static [usize] = &[100, 500, 1000, 5000, 10000];
